@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### Secrets ###
+.env
+
 ### STS ###
 .apt_generated
 .classpath
@@ -19,7 +22,6 @@ target/
 *.iml
 *.ipr
 *.log
-*.env
 *.logs
 config/*
 
