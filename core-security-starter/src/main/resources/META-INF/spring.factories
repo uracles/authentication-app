@@ -1,0 +1,2 @@
+# Spring Boot 3.x uses AutoConfiguration.imports (META-INF/spring/).
+# This file is kept for IDE tooling compatibility only.
