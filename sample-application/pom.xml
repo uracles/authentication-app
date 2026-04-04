@@ -12,7 +12,7 @@
 
     <artifactId>sample-application</artifactId>
     <packaging>jar</packaging>
-<!--    <n>Sample Application</n>-->
+    <name>Sample Application</name>
     <description>Demonstrates usage of the core-security-starter with H2, JPA, and three example endpoints</description>
 
     <!-- No <properties> block here — java.version 21 is inherited from the parent -->

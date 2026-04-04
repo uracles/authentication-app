@@ -1,12 +1,14 @@
 package com.miracle.security.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+@Component
 @Validated
 @ConfigurationProperties(prefix = "app.security")
 public class SecurityProperties {

@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/public")
+@RequestMapping("/api/v1")
 public class AuthController {
 
     private final AuthService authService;
@@ -26,7 +26,6 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(req));
     }
 
-    /** Self-service registration (assigns ROLE_USER). */
     @PostMapping("/auth/register")
     public ResponseEntity<AuthDtos.AuthResponse> register(@Valid @RequestBody AuthDtos.RegisterRequest req) {
         return ResponseEntity.ok(authService.register(req));

@@ -12,7 +12,7 @@
 
     <artifactId>core-security-starter</artifactId>
     <packaging>jar</packaging>
-<!--    <n>Core Security Starter</n>-->
+    <name>Core Security Starter</name>
     <description>Reusable Spring Boot Security Starter providing JWT auth, RBAC, and cross-cutting concerns</description>
 
     <!-- No <properties> block here — java.version 21 is inherited from the parent -->

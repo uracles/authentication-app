@@ -22,9 +22,6 @@ public class AdminController {
         this.userRepository = userRepository;
     }
 
-    /**
-     * Lists all registered users (username + roles only; never exposes password hashes).
-     */
     @GetMapping("/users")
     public ResponseEntity<List<Map<String, Object>>> listUsers() {
         List<Map<String, Object>> users = userRepository.findAll().stream()

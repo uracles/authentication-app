@@ -4,6 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Inherit from Spring Boot starter parent — handles Lombok, compiler,
+         encoding, resource filtering, and plugin versions automatically -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.4</version>
+        <relativePath/>
+    </parent>
+
     <groupId>com.miracle</groupId>
     <artifactId>authentication-application</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -17,23 +26,18 @@
     </modules>
 
     <properties>
+        <!-- Target Java 21 bytecode even though Maven runs on Java 24 -->
         <java.version>21</java.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-boot.version>3.5.4</spring-boot.version>
-        <jjwt.version>0.11.5</jjwt.version>
+        <jjwt.version>0.12.5</jjwt.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+            <!-- JWT — versions not managed by Spring Boot BOM, so we pin them here -->
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt-api</artifactId>
@@ -55,10 +59,29 @@
     <build>
         <pluginManagement>
             <plugins>
+                <!-- spring-boot-starter-parent already configures this plugin.
+                     We only override to add the Lombok annotation processor path
+                     and to lock the release to Java 21. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <release>${java.version}</release>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <!-- No version needed — starter-parent pins a
+                                     compatible Lombok version automatically -->
+                            </path>
+                        </annotationProcessorPaths>
+                    </configuration>
+                </plugin>
+
+                <!-- Exclude Lombok from the final fat jar in all child modules -->
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${spring-boot.version}</version>
                     <configuration>
                         <excludes>
                             <exclude>
@@ -68,25 +91,140 @@
                         </excludes>
                     </configuration>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.13.0</version>
-                    <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
-                        <release>${java.version}</release>
-                        <annotationProcessorPaths>
-                            <path>
-                                <groupId>org.projectlombok</groupId>
-                                <artifactId>lombok</artifactId>
-                                <version>1.18.32</version>
-                            </path>
-                        </annotationProcessorPaths>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>
 
 </project>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<project xmlns="http://maven.apache.org/POM/4.0.0"-->
+<!--         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+<!--         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">-->
+<!--    <modelVersion>4.0.0</modelVersion>-->
+
+<!--    <groupId>com.miracle</groupId>-->
+<!--    <artifactId>authentication-application</artifactId>-->
+<!--    <version>1.0-SNAPSHOT</version>-->
+<!--    <packaging>pom</packaging>-->
+<!--    <name>Authentication Application - Parent</name>-->
+<!--    <description>Multi-module Spring Boot Authentication and Authorization System</description>-->
+
+<!--    <modules>-->
+<!--        <module>core-security-starter</module>-->
+<!--        <module>sample-application</module>-->
+<!--    </modules>-->
+
+<!--    <properties>-->
+<!--        <java.version>21</java.version>-->
+<!--        <maven.compiler.source>21</maven.compiler.source>-->
+<!--        <maven.compiler.target>21</maven.compiler.target>-->
+<!--        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
+<!--        <spring-boot.version>3.5.4</spring-boot.version>-->
+<!--        <jjwt.version>0.12.5</jjwt.version>-->
+<!--        <lombok.version>1.18.36</lombok.version>-->
+<!--    </properties>-->
+
+<!--    <dependencyManagement>-->
+<!--        <dependencies>-->
+
+<!--            &lt;!&ndash;-->
+<!--                IMPORTANT: Lombok pin must come BEFORE the Spring Boot BOM import.-->
+<!--                Maven dependencyManagement resolves first-declared wins, so if the-->
+<!--                BOM import is listed first, its older Lombok version overrides ours.-->
+<!--                Placing our pin first guarantees 1.18.34 is used everywhere.-->
+<!--            &ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>org.projectlombok</groupId>-->
+<!--                <artifactId>lombok</artifactId>-->
+<!--                <version>${lombok.version}</version>-->
+<!--            </dependency>-->
+
+<!--            &lt;!&ndash; Spring Boot BOM - imported second so our Lombok pin wins &ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-dependencies</artifactId>-->
+<!--                <version>${spring-boot.version}</version>-->
+<!--                <type>pom</type>-->
+<!--                <scope>import</scope>-->
+<!--            </dependency>-->
+
+<!--            &lt;!&ndash; JWT &ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>io.jsonwebtoken</groupId>-->
+<!--                <artifactId>jjwt-api</artifactId>-->
+<!--                <version>${jjwt.version}</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>io.jsonwebtoken</groupId>-->
+<!--                <artifactId>jjwt-impl</artifactId>-->
+<!--                <version>${jjwt.version}</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>io.jsonwebtoken</groupId>-->
+<!--                <artifactId>jjwt-jackson</artifactId>-->
+<!--                <version>${jjwt.version}</version>-->
+<!--            </dependency>-->
+
+<!--        </dependencies>-->
+<!--    </dependencyManagement>-->
+
+<!--    <build>-->
+<!--        <pluginManagement>-->
+<!--            <plugins>-->
+<!--                <plugin>-->
+<!--                    <groupId>org.springframework.boot</groupId>-->
+<!--                    <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--                    <version>${spring-boot.version}</version>-->
+<!--                    <configuration>-->
+<!--                        <excludes>-->
+<!--                            <exclude>-->
+<!--                                <groupId>org.projectlombok</groupId>-->
+<!--                                <artifactId>lombok</artifactId>-->
+<!--                            </exclude>-->
+<!--                        </excludes>-->
+<!--                    </configuration>-->
+<!--                </plugin>-->
+<!--                <plugin>-->
+<!--                    <groupId>org.apache.maven.plugins</groupId>-->
+<!--                    <artifactId>maven-compiler-plugin</artifactId>-->
+<!--                    <version>3.13.0</version>-->
+<!--                    <configuration>-->
+<!--                        <source>${java.version}</source>-->
+<!--                        <target>${java.version}</target>-->
+<!--                        <release>${java.version}</release>-->
+<!--                        <annotationProcessorPaths>-->
+<!--                            <path>-->
+<!--                                <groupId>org.projectlombok</groupId>-->
+<!--                                <artifactId>lombok</artifactId>-->
+<!--                                <version>${lombok.version}</version>-->
+<!--                            </path>-->
+<!--                        </annotationProcessorPaths>-->
+<!--                    </configuration>-->
+<!--                </plugin>-->
+<!--            </plugins>-->
+<!--        </pluginManagement>-->
+<!--    </build>-->
+
+<!--</project>-->
