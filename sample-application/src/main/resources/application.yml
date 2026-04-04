@@ -1,0 +1,42 @@
+server:
+  port: 2026
+
+spring:
+  application:
+    name: sample-application
+
+  datasource:
+    url: jdbc:h2:mem:authdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+
+  h2:
+    console:
+      enabled: true          # Browse schema at http://localhost:8080/h2-console
+      path: /h2-console
+
+# ── Core Security Starter configuration ────────────────────────────────────
+app:
+  security:
+    # IMPORTANT: In production set this via environment variable or secrets manager.
+    # Must be >= 32 characters for HMAC-SHA256.
+    jwt-secret: "change-me-in-production-must-be-at-least-32-chars!"
+    jwt-expiration-ms: 86400000   # 24 hours
+    jwt-issuer: sample-application
+    public-paths:
+      - /api/public/**
+      - /h2-console/**
+      - /actuator/health
+
+# ── Logging ─────────────────────────────────────────────────────────────────
+logging:
+  level:
+    com.example: DEBUG
+    org.springframework.security: INFO

@@ -3,6 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>com.miracle</groupId>
         <artifactId>authentication-application</artifactId>
@@ -11,19 +12,13 @@
 
     <artifactId>core-security-starter</artifactId>
     <packaging>jar</packaging>
-    <name>Core Security Starter</name>
-    <description>Reusable Spring Boot Security Starter </description>
+<!--    <n>Core Security Starter</n>-->
+    <description>Reusable Spring Boot Security Starter providing JWT auth, RBAC, and cross-cutting concerns</description>
 
-<!--    <properties>-->
-<!--        <maven.compiler.source>24</maven.compiler.source>-->
-<!--        <maven.compiler.target>24</maven.compiler.target>-->
-<!--        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
-<!--    </properties>-->
-    <properties>
-        <java.version>21</java.version>
-    </properties>
+    <!-- No <properties> block here — java.version 21 is inherited from the parent -->
 
     <dependencies>
+        <!-- Spring Boot Auto-configuration support -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
@@ -34,21 +29,25 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Spring Security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+        <!-- Spring Web (for filters, controllers) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- Validation -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
+        <!-- JWT (versions managed by parent dependencyManagement) -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -64,12 +63,14 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
 
+        <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -82,28 +83,6 @@
         </dependency>
     </dependencies>
 
-<!--    <build>-->
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-compiler-plugin</artifactId>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </build>-->
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version> <!-- latest stable -->
-                <configuration>
-                    <source>21</source>
-                    <target>21</target>
-                    <release>21</release>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <!-- No <build> block needed — compiler plugin config is inherited from parent pluginManagement -->
 
 </project>
