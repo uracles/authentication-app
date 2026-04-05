@@ -14,6 +14,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * Application-level exception handler.
+ *
+ * This complements the starter's SecurityExceptionHandler (which handles 401/403).
+ * Reuses ApiErrorResponse from the starter so all error envelopes are consistent.
+ */
 @Configuration
 public class SecurityBeansConfig {
 

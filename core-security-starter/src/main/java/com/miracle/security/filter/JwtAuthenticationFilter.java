@@ -24,16 +24,12 @@ import java.util.stream.Collectors;
 /**
  * Stateless JWT authentication filter executed once per request.
  *
- * Design decisions:
+ * My Design decisions:
  * - Extends {@link OncePerRequestFilter} to guarantee single execution even in
  *   async dispatch scenarios.
  * - Roles are read directly from the JWT claims so that the filter does NOT hit
  *   the database on every request. UserDetailsService is still called to load
- *   the full principal (e.g. for account-enabled checks) but this is optional
- *   and can be configured to skip via property in a future iteration.
- * - Authentication object is set on the SecurityContext only after full validation
- *   so partial/invalid tokens are silently ignored (401 is returned by the
- *   AuthenticationEntryPoint instead).
+ *   the full principal
  */
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 

@@ -8,6 +8,10 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+/**
+ * My design decision: All security-sensitive configuration is centralised here so the
+ * consuming application never needs to touch JWT plumbing directly.
+ */
 @Component
 @Validated
 @ConfigurationProperties(prefix = "app.security")

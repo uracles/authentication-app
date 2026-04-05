@@ -31,6 +31,7 @@ public class SecurityFilterConfig {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers.frameOptions(frame -> frame.disable())) // allow H2 iframe
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .exceptionHandling(ex -> ex
@@ -39,6 +40,7 @@ public class SecurityFilterConfig {
                 )
 
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/h2-console/**").permitAll() // allow H2
                         .requestMatchers(securityProperties.getPublicPaths()).permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()

@@ -20,10 +20,10 @@ A multi-module Spring Boot authentication and authorisation system built around 
 ## Architecture Overview
 
 ```
-auth-system/                        ← Maven parent (pom only)
+authentication-application/                        ← Maven parent (pom only)
 ├── core-security-starter/          ← Reusable Spring Boot Starter (jar)
 │   └── src/main/java/com/example/security/
-│       ├── config/                 CoreSecurityAutoConfiguration.java
+│       ├── config/                 CoreSecurityAutoConfiguration.java, SecurityBeansConfig.java, SecurityFilterConfig.java
 │       ├── filter/                 JwtAuthenticationFilter.java
 │       ├── token/                  JwtTokenProvider.java
 │       ├── exception/              SecurityExceptionHandler.java
@@ -32,11 +32,11 @@ auth-system/                        ← Maven parent (pom only)
 └── sample-application/             ← Consuming app (fat jar)
     └── src/main/java/com/example/app/
         ├── SampleApplication.java
-        ├── config/                 DataInitializer, AppExceptionHandler
+        ├── config/                 DataInitializer, AppExceptionHandler, SwaggerConfig
         ├── controller/             AuthController, UserController, AdminController
-        ├── model/                  User, AuthDtos
+        ├── model/                  User, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, UserProfileResponse
         ├── repository/             UserRepository
-        └── service/                AuthService, AppUserDetailsService
+        └── service/                AdminService, AuthService, AppUserDetailsService, UserService
 ```
 
 **Request flow:**
@@ -107,7 +107,7 @@ No Docker or external database required – H2 in-memory is used for demo purpos
 
 ```bash
 git clone <repo-url>
-cd auth-system
+cd authentication-application
 ```
 
 ### 2. Build both modules
@@ -155,7 +155,7 @@ curl http://localhost:8080/api/public/health
 ### Public – Login
 
 ```bash
-curl -s -X POST http://localhost:8080/api/public/auth/login \
+curl -s -X POST http://localhost:2026/api/public/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"AdminPass1!"}' | jq .
 ```
@@ -174,7 +174,7 @@ curl -s -X POST http://localhost:8080/api/public/auth/login \
 ### Public – Register
 
 ```bash
-curl -s -X POST http://localhost:8080/api/public/auth/register \
+curl -s -X POST http://localhost:2026/api/public/auth/register \
   -H "Content-Type: application/json" \
   -d '{"username":"newuser","password":"MyPass123!"}' | jq .
 ```
@@ -182,14 +182,14 @@ curl -s -X POST http://localhost:8080/api/public/auth/register \
 ### Authenticated – My profile
 
 ```bash
-curl -s http://localhost:8080/api/user/me \
+curl -s http://localhost:2026/api/user/me \
   -H "Authorization: Bearer <TOKEN>" | jq .
 ```
 
 **Without token → 401:**
 ```json
 {
-  "timestamp": "2024-...",
+  "timestamp": "2026-...",
   "status": 401,
   "error": "Unauthorized",
   "message": "Authentication is required to access this resource",
@@ -212,7 +212,7 @@ curl -s http://localhost:8080/api/admin/users \
 **With ROLE_USER token → 403:**
 ```json
 {
-  "timestamp": "2024-...",
+  "timestamp": "2026-...",
   "status": 403,
   "error": "Forbidden",
   "message": "You do not have permission to access this resource",

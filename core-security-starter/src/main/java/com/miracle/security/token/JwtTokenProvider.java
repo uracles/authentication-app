@@ -16,6 +16,16 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Stateless utility bean for JWT creation and validation.
+ *
+ * My design decisions:
+ * - Uses JJWT 0.12.x fluent API
+ * - Secret key is derived once at bean construction time to avoid repeated parsing.
+ * - Claims are kept minimal (userId, username, roles) to limit token bloat.
+ * - Validation errors are logged at WARN level and propagated as typed exceptions
+ *   so the filter layer can return precise HTTP status codes.
+ */
 public class JwtTokenProvider {
 
     private static final Logger log = LoggerFactory.getLogger(JwtTokenProvider.class);

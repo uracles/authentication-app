@@ -1,7 +1,6 @@
 package com.miracle.app.service;
 
-import com.miracle.app.model.AuthDtos;
-import com.miracle.app.model.User;
+import com.miracle.app.model.*;
 import com.miracle.app.repository.UserRepository;
 import com.miracle.security.token.JwtTokenProvider;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +16,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Application-level authentication service.
+ *
+ * My design decisions:
+ * - Delegates credential verification to Spring Security's AuthenticationManager so
+ *   the logic benefits from security events, BadCredentialsException, etc.
+ * - JWT generation is delegated to JwtTokenProvider (from the starter), keeping the
+ *   application free of JWT plumbing.
+ * - Registration intentionally assigns only ROLE_USER by default; admins must be
+ *   bootstrapped via DataInitializer or a privileged admin endpoint.
+ */
 @Service
 @Transactional
 public class AuthService {
@@ -36,9 +46,9 @@ public class AuthService {
         this.passwordEncoder       = passwordEncoder;
     }
 
-    public AuthDtos.AuthResponse login(AuthDtos.LoginRequest req) {
+    public LoginResponse login(LoginRequest loginRequest) {
         Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword()));
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         UserDetails principal = (UserDetails) auth.getPrincipal();
 
@@ -51,10 +61,10 @@ public class AuthService {
 
         String token = tokenProvider.generateToken(user.getId(), principal);
 
-        return new AuthDtos.AuthResponse(token, user.getId(), user.getUsername(), roles);
+        return new LoginResponse(token, user.getId(), user.getUsername(), roles);
     }
 
-    public AuthDtos.AuthResponse register(AuthDtos.RegisterRequest req) {
+    public RegisterResponse register(RegisterRequest req) {
         if (userRepository.existsByUsername(req.getUsername())) {
             throw new IllegalArgumentException("Username already taken: " + req.getUsername());
         }
@@ -68,10 +78,11 @@ public class AuthService {
 
         userRepository.save(user);
 
-        // Auto-login after registration
-        return login(new AuthDtos.LoginRequest() {{
-            setUsername(req.getUsername());
-            setPassword(req.getPassword());
-        }});
+        return new RegisterResponse(
+                user.getId(),
+                user.getUsername(),
+                List.copyOf(user.getRoles()),
+                "Registration successful. Please log in."
+        );
     }
 }

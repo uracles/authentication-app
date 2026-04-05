@@ -11,7 +11,15 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
-
+/**
+ * Seeds the database with default users on first startup.
+ *
+ * My design decision: using ApplicationRunner (not @PostConstruct) ensures JPA is fully
+ * initialised before we attempt writes.
+ *
+ * IMPORTANT: These credentials will have to be changed before deploying to production,
+ * It is best to bootstrap admins via a secrets-manager-backed migration script.
+ */
 @Component
 public class DataInitializer implements ApplicationRunner {
 

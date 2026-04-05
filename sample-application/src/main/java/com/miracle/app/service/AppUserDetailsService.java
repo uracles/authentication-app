@@ -10,7 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
-
+/**
+ * Bridges the application's User entity with Spring Security's authentication mechanism.
+ *
+ * My design decision: this lives in the sample-application (not the starter) because the
+ * starter has no knowledge of any particular persistence layer. The starter only depends
+ * on the {@link UserDetailsService} interface.
+ */
 @Service
 @Transactional(readOnly = true)
 public class AppUserDetailsService implements UserDetailsService {

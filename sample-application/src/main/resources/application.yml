@@ -24,13 +24,18 @@ spring:
 
 app:
   security:
-    jwt-secret: ${JWT_SECRET:}
+    jwt-secret: ${JWT_SECRET:a9F3kLmP8xQ2zR7tV4nY6wB1cD5eH0jK}
     jwt-expiration-ms: ${JWT_EXPIRATION_MS:86400000}
     jwt-issuer: ${JWT_ISSUER:sample-application}
     public-paths:
       - /api/public/**
       - /h2-console/**
       - /actuator/health
+      - /swagger-ui/**
+      - /swagger-ui.html
+      - /v3/api-docs/**
+      - /v3/api-docs
+      - /favicon.ico
 
 logging:
   level:

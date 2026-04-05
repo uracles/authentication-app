@@ -34,7 +34,6 @@ public class SecurityExceptionHandler implements AuthenticationEntryPoint, Acces
         this.objectMapper = objectMapper;
     }
 
-    //401
     @Override
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
@@ -47,7 +46,6 @@ public class SecurityExceptionHandler implements AuthenticationEntryPoint, Acces
                 "Authentication is required to access this resource");
     }
 
-    //403
     @Override
     public void handle(HttpServletRequest request,
                        HttpServletResponse response,
@@ -60,7 +58,6 @@ public class SecurityExceptionHandler implements AuthenticationEntryPoint, Acces
                 "You do not have permission to access this resource");
     }
 
-  //app error
     @ExceptionHandler(AccessDeniedException.class)
     public org.springframework.http.ResponseEntity<ApiErrorResponse> handleAccessDenied(
             AccessDeniedException ex, HttpServletRequest request) {

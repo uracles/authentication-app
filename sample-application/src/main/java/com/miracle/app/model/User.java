@@ -6,6 +6,11 @@ import lombok.*;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Persistent user entity stored in H2 DB for testing purpose.
+ *
+ * Design decision: roles are stored as a simple comma-joined string for H2 demo simplicity.
+ */
 @Entity
 @Table(name = "app_user",
        uniqueConstraints = @UniqueConstraint(columnNames = "username"))
